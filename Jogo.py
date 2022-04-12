@@ -1,5 +1,5 @@
 from random import randint
-cartas=[{'nome':'mago','atk':5000,'dfs':3000},{'nome':'feiticeira','atk':4000,'dfs':3500},{'nome':'lanceiro','atk':5000,'dfs':1000},{'nome':'conselheiro','atk':0,'dfs':5000},{'nome':'guardas','atk':500,'dfs':5000},{'nome':'Caçador','atk':5000,'dfs':3000},{'nome':'cavaleiro','atk':5000,'dfs':4500},{'nome':'princesa','atk':3000,'dfs':2000},{'nome':'dragão','atk':5000,'dfs':1000},{'nome':'flecheiro','atk':3500,'dfs':0},{'nome':'lenhador','atk':4000,'dfs':4000},{'nome':'rei','atk':2500,'dfs':4000}]
+cartas=[{'nome':'mago','atk':3500,'dfs':3000},{'nome':'feiticeira','atk':3000,'dfs':3500},{'nome':'lanceiro','atk':4500,'dfs':2000},{'nome':'conselheiro','atk':3500,'dfs':4000},{'nome':'guardas','atk':500,'dfs':5000},{'nome':'Caçador','atk':5000,'dfs':3000},{'nome':'cavaleiro','atk':4000,'dfs':4000},{'nome':'princesa','atk':3000,'dfs':2000},{'nome':'dragão','atk':4000,'dfs':1000},{'nome':'flecheiro','atk':3500,'dfs':3500},{'nome':'lenhador','atk':4000,'dfs':3000},{'nome':'rei','atk':2500,'dfs':5000}]
 porçao=[{'atk+':500,'qua':3},{'dfs+':500,'qua':3},{'imunidade':0,'qua':3},{'atk2':2,'qua':3},{'dfs2':2,'qua':3}]
 pc=[]
 usu=[]
@@ -69,6 +69,7 @@ while True:
                             usu.pop(c-1)
                             carpc['dfs']=dano*-1
                             vpc=vpc+1
+                            print(f'Resta {dano*-1} de Defesa')
                         rod=rod+1
                         crt=0
                         break
@@ -89,6 +90,7 @@ while True:
                             print('Pc ganhou')
                             usu.pop(c-1)
                             carpc['atk']=dano*-1
+                            print(f'Resta {dano*-1} de ataque')
                             vpc=vpc+1
                         rod=rod+1
                         break
@@ -108,6 +110,18 @@ while True:
                     break
         elif c>len(usu) or c==0:
             print('\033[031mNão existe essa carta escolha uma válida\033[m')
+
+    print(f'{"=+"*15}')
+    print(f'\033[033m{"Placar":^30}\033[m')
+    print(f'\033[036mUsuario={vusu}, pc={vpc}\033[m')
+    print(f'\033[036mCartas usuario: {len(usu)}\nCartas Pc: {len(pc)}\033[m')
+    if len(usu)==0 or len(pc)==0:
+        if len(usu)==0:
+            vencedor='Pc'
+        else:
+            vencedor='Usuario'
+        print(f'Fim do jogo o {vencedor} Venceu')
+        break
         crt=0
                                 #vez do pc
     if rod%2==1 and len(pc)>0:
@@ -132,13 +146,12 @@ while True:
                     print(f'\033[031mAtaque: {i["atk"]}\033[m')
                     print(f'\033[032mDefesa: {i["dfs"]}\033[m')
                     print('\n',end='')
-                c=int(input(f'Escolha a sua carta 1/{len(usu)}'))
+                c=int(input(f'Escolha a sua carta 1/{len(usu)}: '))
                 if c>len(usu) or c==0:
                     print('\033[031mnão existe essa carta escolha uma válida\033[m')
                 else:
                     carusu=usu[c-1]
                     print(f'A carta escolhida foi:\n\033[036m{carusu["nome"]}\033[m\n\033[031mAtaque={carusu["atk"]}\033[m\n\033[032mDefesa={carusu["dfs"]}\033[m')
-                    print(carpc)
                     if acaopc=='A':         
                         dano=carpc['atk']-carusu['dfs']
                         print(dano)
@@ -147,6 +160,7 @@ while True:
                             vpc=vpc+1
                             usu.pop(c-1)
                             carpc['atk']=dano
+                            print(f'Resta {dano} de Ataque')
                         if dano==0:
                             print('Empatou')
                             carpc['atk']=carusu['def']=0
@@ -155,6 +169,7 @@ while True:
                             vusu=vusu+1
                             pc.pop(numpc)
                             carusu['dfs']=dano*-1
+                            print(f'Resta {dano*-1} de Defesa')
                     if acaopc == 'D':
                         dano=carpc['dfs']-carusu['atk']
                         print(dano)
@@ -163,6 +178,7 @@ while True:
                             carusu['atk']=dano*-1
                             vusu=vusu+1
                             pc.pop(numpc)
+                            print(f'Resta {dano*-1} de ataque')
                         elif dano==0:
                             print('empate')
                             carusu['atk']=carpc['dfs']=0
@@ -171,8 +187,7 @@ while True:
                             vpc=vpc+1
                             carpc['dfs']=dano
                             usu.pop(c-1)
-                    print(f'A carta escolhida foi:\n\033[036m{carusu["nome"]}\033[m\n\033[031mAtaque={carusu["atk"]}\033[m\n\033[032mDefesa={carusu["dfs"]}\033[m')
-                    print(carpc)
+                            print(f'Resta {dano} de defesa')
                     break
 
         if acaopc=='R':
