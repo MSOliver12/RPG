@@ -111,7 +111,7 @@ while True:
                             rod=rod+1
                     break
             elif c>len(usu) or c==0:
-                print('\033[031mNão existe essa carta escolha uma válida\033[m')
+                print('\033[031mNão existe essa carta, escolha uma válida\033[m')
         crt=0
     print(f'{"=+"*15}')
     print(f'\033[033m{"Placar":^30}\033[m')
@@ -152,7 +152,7 @@ while True:
                 if c.isnumeric()==True:
                     c=int(c)
                     if c>len(usu) or c==0:
-                        print('\033[031mnão existe essa carta escolha uma válida\033[m')
+                        print('\033[031mNão existe essa carta, escolha uma válida\033[m')
                     else:
                         carusu=usu[c-1]
                         print(f'A carta escolhida foi:\n\033[036m{carusu["nome"]}\033[m\n\033[031mAtaque={carusu["atk"]}\033[m\n\033[032mDefesa={carusu["dfs"]}\033[m')
