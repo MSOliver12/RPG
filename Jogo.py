@@ -42,75 +42,77 @@ while True:
             print(f'\033[031mAtaque={i["atk"]}\033[m')
             print(f'\033[032mDefesa={i["dfs"]}\033[m')
             print('\n',end='')
-        c=int(input(f'Qual carta deseja usar? 1/{len(usu)}: '))
-        if c<=len(usu) and c!=0:
-            carusu=usu[c-1]
-            print(f'A carta escolhida foi:\n\033[036m{carusu["nome"]}\033[m\n\033[031mAtaque={carusu["atk"]}\033[m\n\033[032mDefesa={carusu["dfs"]}\033[m')
-                                                #escolha da ação vez do usuario#
-            while True:
-                acaousu=input('Qual ação deseja efetuar? A/D/R').upper().strip()[0]
-                if acaousu in 'AD':
-                    numpc=randint(0,len(pc)-1)
-                    carpc=pc[numpc]
-                    if acaousu=='A':
-                        #O usuario vai atacar logo o pc defende
-                        dano=carusu['atk']-carpc['dfs']
-                        if dano>0:
-                            print('usuario ganhou')
-                            pc.pop(numpc)
-                            carusu['atk']=dano                   
-                            vusu=vusu+1
-                            print(f'resta:{dano} ataque')
-                        elif dano==0:
-                            print('empate')
-                            carusu['atk']=carpc['dfs']=0
-                        else:
-                            print('Pc ganhou')
-                            usu.pop(c-1)
-                            carpc['dfs']=dano*-1
-                            vpc=vpc+1
-                            print(f'Resta {dano*-1} de Defesa')
-                        rod=rod+1
-                        crt=0
-                        break
+        c=input(f'Qual carta deseja usar? 1/{len(usu)}: ')
+        if c.isnumeric()==True:
+            c=int(c)
+            if c<=len(usu) and c!=0:
+                carusu=usu[c-1]
+                print(f'A carta escolhida foi:\n\033[036m{carusu["nome"]}\033[m\n\033[031mAtaque={carusu["atk"]}\033[m\n\033[032mDefesa={carusu["dfs"]}\033[m')
+                                                    #escolha da ação vez do usuario#
+                while True:
+                    acaousu=input('Qual ação deseja efetuar? A/D/R').upper().strip()[0]
+                    if acaousu in 'AD':
+                        numpc=randint(0,len(pc)-1)
+                        carpc=pc[numpc]
+                        if acaousu=='A':
+                            #O usuario vai atacar logo o pc defende
+                            dano=carusu['atk']-carpc['dfs']
+                            if dano>0:
+                                print('usuario ganhou')
+                                pc.pop(numpc)
+                                carusu['atk']=dano                   
+                                vusu=vusu+1
+                                print(f'resta:{dano} ataque')
+                            elif dano==0:
+                                print('empate')
+                                carusu['atk']=carpc['dfs']=0
+                            else:
+                                print('Pc ganhou')
+                                usu.pop(c-1)
+                                carpc['dfs']=dano*-1
+                                vpc=vpc+1
+                                print(f'Resta {dano*-1} de Defesa')
+                            rod=rod+1
+                            crt=0
+                            break
+                            
+                        if acaousu=='D':
+                            #O usuario defende logo o pc ataca
+                            dano=carusu['dfs']-carpc['atk']
+                            if dano>0:
+                                print('Usuario ganhou')
+                                pc.pop(numpc)
+                                carusu['dfs']=dano
+                                vusu=vusu+1
+                                print(f'Resta:{dano} de defesa')
+                            elif dano==0:
+                                print('Empatou')
+                                carusu['dfs']=carpc['atk']=0
+                            else:
+                                print('Pc ganhou')
+                                usu.pop(c-1)
+                                carpc['atk']=dano*-1
+                                print(f'Resta {dano*-1} de ataque')
+                                vpc=vpc+1
+                            rod=rod+1
+                            break
                         
-                    if acaousu=='D':
-                        #O usuario defende logo o pc ataca
-                        dano=carusu['dfs']-carpc['atk']
-                        if dano>0:
-                            print('Usuario ganhou')
-                            pc.pop(numpc)
-                            carusu['dfs']=dano
-                            vusu=vusu+1
-                            print(f'Resta:{dano} de defesa')
-                        elif dano==0:
-                            print('Empatou')
-                            carusu['dfs']=carpc['atk']=0
-                        else:
-                            print('Pc ganhou')
-                            usu.pop(c-1)
-                            carpc['atk']=dano*-1
-                            print(f'Resta {dano*-1} de ataque')
-                            vpc=vpc+1
-                        rod=rod+1
-                        break
-                    
-                if acaousu=='R':
-                    opc=input('O que deseja recarregar? A/D').strip().upper()[0]
-                    if opc in 'AD':
-                        if opc=='A':
-                            carusu['atk']=carusu['atk']+500
-                            print('A carta recebeu 500 de ataque')
-                       
-                        if opc=='D':
-                            carusu['dfs']=carusu['dfs']+500
-                            print('A carta recebeu 500 de defesa')
-                          
-                        rod=rod+1
+                    if acaousu=='R':
+                        opc=input('O que deseja recarregar? A/D').strip().upper()[0]
+                        if opc in 'AD':
+                            if opc=='A':
+                                carusu['atk']=carusu['atk']+500
+                                print('A carta recebeu 500 de ataque')
+                        
+                            if opc=='D':
+                                carusu['dfs']=carusu['dfs']+500
+                                print('A carta recebeu 500 de defesa')
+                            
+                            rod=rod+1
                     break
-        elif c>len(usu) or c==0:
-            print('\033[031mNão existe essa carta escolha uma válida\033[m')
-
+            elif c>len(usu) or c==0:
+                print('\033[031mNão existe essa carta escolha uma válida\033[m')
+        crt=0
     print(f'{"=+"*15}')
     print(f'\033[033m{"Placar":^30}\033[m')
     print(f'\033[036mUsuario={vusu}, pc={vpc}\033[m')
@@ -146,49 +148,52 @@ while True:
                     print(f'\033[031mAtaque: {i["atk"]}\033[m')
                     print(f'\033[032mDefesa: {i["dfs"]}\033[m')
                     print('\n',end='')
-                c=int(input(f'Escolha a sua carta 1/{len(usu)}: '))
-                if c>len(usu) or c==0:
-                    print('\033[031mnão existe essa carta escolha uma válida\033[m')
-                else:
-                    carusu=usu[c-1]
-                    print(f'A carta escolhida foi:\n\033[036m{carusu["nome"]}\033[m\n\033[031mAtaque={carusu["atk"]}\033[m\n\033[032mDefesa={carusu["dfs"]}\033[m')
-                    if acaopc=='A':         
-                        dano=carpc['atk']-carusu['dfs']
-                        print(dano)
-                        if dano>0:
-                            print('Pc venceu')
-                            vpc=vpc+1
-                            usu.pop(c-1)
-                            carpc['atk']=dano
-                            print(f'Resta {dano} de Ataque')
-                        if dano==0:
-                            print('Empatou')
-                            carpc['atk']=carusu['def']=0
-                        if dano<0:
-                            print('Usuario venceu')
-                            vusu=vusu+1
-                            pc.pop(numpc)
-                            carusu['dfs']=dano*-1
-                            print(f'Resta {dano*-1} de Defesa')
-                    if acaopc == 'D':
-                        dano=carpc['dfs']-carusu['atk']
-                        print(dano)
-                        if dano<0:
-                            print('usuario vence')
-                            carusu['atk']=dano*-1
-                            vusu=vusu+1
-                            pc.pop(numpc)
-                            print(f'Resta {dano*-1} de ataque')
-                        elif dano==0:
-                            print('empate')
-                            carusu['atk']=carpc['dfs']=0
-                        else: 
-                            print('Pc venceu')
-                            vpc=vpc+1
-                            carpc['dfs']=dano
-                            usu.pop(c-1)
-                            print(f'Resta {dano} de defesa')
-                    break
+                c=input(f'Escolha a sua carta 1/{len(usu)}: ')
+                if c.isnumeric()==True:
+                    c=int(c)
+                    if c>len(usu) or c==0:
+                        print('\033[031mnão existe essa carta escolha uma válida\033[m')
+                    else:
+                        carusu=usu[c-1]
+                        print(f'A carta escolhida foi:\n\033[036m{carusu["nome"]}\033[m\n\033[031mAtaque={carusu["atk"]}\033[m\n\033[032mDefesa={carusu["dfs"]}\033[m')
+                        if acaopc=='A':         
+                            dano=carpc['atk']-carusu['dfs']
+                            print(dano)
+                            if dano>0:
+                                print('Pc venceu')
+                                vpc=vpc+1
+                                usu.pop(c-1)
+                                carpc['atk']=dano
+                                print(f'Resta {dano} de Ataque')
+                            if dano==0:
+                                print('Empatou')
+                                carpc['atk']=carusu['def']=0
+                            if dano<0:
+                                print('Usuario venceu')
+                                vusu=vusu+1
+                                pc.pop(numpc)
+                                carusu['dfs']=dano*-1
+                                print(f'Resta {dano*-1} de Defesa')
+                        if acaopc == 'D':
+                            dano=carpc['dfs']-carusu['atk']
+                            print(dano)
+                            if dano<0:
+                                print('usuario vence')
+                                carusu['atk']=dano*-1
+                                vusu=vusu+1
+                                pc.pop(numpc)
+                                print(f'Resta {dano*-1} de ataque')
+                            elif dano==0:
+                                print('empate')
+                                carusu['atk']=carpc['dfs']=0
+                            else: 
+                                print('Pc venceu')
+                                vpc=vpc+1
+                                carpc['dfs']=dano
+                                usu.pop(c-1)
+                                print(f'Resta {dano} de defesa')
+                        break
+                crt=0
 
         if acaopc=='R':
             acaopc=acoes[randint(0,1)]
