@@ -1,429 +1,235 @@
+from dataclasses import replace
 from random import randint
 cartas=[{'nome':'mago','atk':3500,'dfs':3000},{'nome':'feiticeira','atk':3000,'dfs':3500},{'nome':'lanceiro','atk':4500,'dfs':2000},{'nome':'conselheiro','atk':3500,'dfs':4000},{'nome':'guardas','atk':500,'dfs':5000},{'nome':'Caçador','atk':5000,'dfs':3000},{'nome':'cavaleiro','atk':4000,'dfs':4000},{'nome':'princesa','atk':3000,'dfs':2000},{'nome':'dragão','atk':4000,'dfs':1000},{'nome':'flecheiro','atk':3500,'dfs':3500},{'nome':'lenhador','atk':4000,'dfs':3000},{'nome':'rei','atk':2500,'dfs':5000}]
 porçoes=[{'nome':'atk','ação':'+500','qua':3},{'nome':'dfs','ação':'+500','qua':3},{'nome':'imunidade','ação':'0','qua':3},{'nome':'atk','ação':'*2','qua':3},{'nome':'dfs','ação':'*2','qua':3}]
 ####pc###
 pc=[]
 pcpor=[]
-atqpc=[]
-defpc=[]
 ####usuario####
 usu=[]
 usupor=[]
-atqusu=[]
-defusu=[]
 #####jogo#####
-crt=vusu=vpc=0
-rod=1
+crt=rod=vusu=vpc=0
+
 #print(len(cartas))
 
 
 #Distribuição de cartas#
-#porções
-for i in range(0,4):
-    porçao=porçoes[randint(0,len(porçoes)-1)]
-    #print(porçao)
-    pos=porçoes.index(porçao)
-    pcpor.append(porçao)
-    porçao['qua']=porçao['qua']-1
-    if porçao['qua']==0:
-        porçoes.pop(pos)
-
-    porçao=porçoes[randint(0,len(porçoes)-1)]
-    #print(porçao)
-    pos=porçoes.index(porçao)
-    usupor.append(porçao)
-    porçao['qua']=porçao['qua']-1
-    if porçao['qua']==0:
-        porçoes.pop(pos)
-#########porçoes do pc###########    
-for i in pcpor:
-    i['qua']=1
-    if i['nome']=='atk':
-        atqpc.append(i)
-    else:
-        defpc.append(i)
-
-#########porçoes do usuario#######
-for i in usupor:
-    i['qua']=1
-    if i['nome']=='atk':
-        atqusu.append(i)
-    else:
-        defusu.append(i)
 #personagens
-for i in range(len(usu),len(usu)+6):
-    carta=cartas[randint(0,len(cartas)-1)]
-    pos=cartas.index(carta)
-    pc.append(carta)
+for i in range(0,12):
+    personagem=cartas[randint(0,len(cartas)-1)]
+    pos=cartas.index(personagem)
+    if i%2==0:
+        usu.append(personagem)
+    else:
+        pc.append(personagem)
     cartas.pop(pos)
-    carta=cartas[randint(0,len(cartas)-1)]
-    pos=(cartas.index(carta))
-    usu.append(carta)
-    cartas.pop(pos)
 
 
-                                                ###jogo###                                            
-while True:
-                #######placar#########
+#porções
+for i in range(0,8):
+    porçao=porçoes[randint(0,len(porçoes)-1)]
+    pos=porçoes.index(porçao)
+    #######porção pro pc##########
+    if i%2==0:
+        pcpor.append(porçao)
+    #######porção do usuario######
+    if i%2==1:
+        usupor.append(porçao)
+
+    if porçao['qua']==0:
+        porçoes.pop(pos)
+###################Fuções############
+
+def cabeçalho (texto):
     print('=+'*25)
-    print(f'\033[033m{"Placar":^50}\033[m')
-    print('=+'*25)
-    print(f'\033[034mPc={vpc:2}\033[m')
-    print(f'\033[035mUsuario={vusu:^2}\033[m')
+    print(f'\033[033m{texto:^50}\033[m')
     print('=+'*25)
 
-    if rod==0:
-        ################## Cartas do Usúario ##############
-        crt=0
-        print('=+'*25)
-        print(f'\033[033m{"Suas cartas são":^50}\033[m ')
-        print('=+'*25)
-        for i in usu:
-            crt=crt+1
-            print(f'\033[034m{crt:>2}°- \033[036m{i["nome"].upper():<13}\033[m',end='  ')
-            print(f'\033[031mAtaque: {i["atk"]:>4}\033[m',end='  ')
-            print(f'\033[032mDefesa: {i["dfs"]:>4}\033[m')
-        print(f'\033[033m{"porções":^50}\033[m')
-        for i in usupor:
-            print(f'\033[034m{i["nome"].upper()}\033[m',end=' ')
-            print(f'\033[036m{i["ação"]}\033[m')
-
-
-                                        ######Vez do usuario####
+def jogo(jogador):
+    pcação=usuação='nada'
     
-    if rod%2==0:
-        crt=0
-        print('=+'*25)
-        print(f'\033[033m{"Personagem":^50}\033[m ')
-        print('=+'*25)
-        for i in usu:
-            crt=crt+1
-            print(f'\033[034m{crt:>2}°- \033[036m{i["nome"].upper():<13}\033[m',end='  ')
-            print(f'\033[031mAtaque: {i["atk"]:>4}\033[m',end='  ')
-            print(f'\033[032mDefesa: {i["dfs"]:>4}\033[m')
-        print('=+'*25)
-
+    
+    carpc=pc[randint(0,len(pc)-1)]
+    if jogador=='pc':
         while True:
-            if len(usu)>=2:
-                c=input(f'\033[035mQual carta deseja escolher:\033[m 1/{len(usu)} ')
-            else:
-                c='1'
-            if c.isnumeric()==True:
-                c=int(c)
-                if 0!=c<=len(usu):
-                    carusu=usu[c-1]
-                    print('=+'*25)
-                    print(f'\033[033m{"A carta escolhida foi":^50}\033[m')
-                    print('=+'*25)
-                    print(f'\033[036m{carusu["nome"].upper()}\033[m')
-                    print(f'\033[031mAtaque: {carusu["atk"]:>4}\033[m')
-                    print(f'\033[032mDefesa: {carusu["dfs"]:>4}\033[m')
-                    print('=+'*25)
-                    while True:
-                        acaousu=input('Deseja \033[031m[A]\033[mtacar \033[032m[D]\033[mefender ou \033[036m[R]\033[mecarregar: ').upper().strip()[0]
-                        if acaousu in 'ADR':
-                                        ####Ataque ou defesa####
-                            if acaousu in 'AD':
-                                        ###escolha da carta do pc###
-                                escpc=randint(0,len(pc)-1)
-                                carpc=pc[escpc]
-                                usapor=randint(0,1)
-                                combate=1
-
-                                #print(carpc)
-                                crt=0
-                                              #####Ataque#### 
-                                if acaousu=='A':
-                                          #########Porção do pc###########
-                                    if usapor==0 or len(defpc)==0:
-                                        print('\033[031mO pc não usou porção de defesa\033[m')
-                                    else:
-                                        qualpor=randint(0,len(defpc)-1)
-                                        pcesc=defpc[qualpor]
-                                        qualpor=randint(0,len(defpc)-1)
-                                        pcesc=defpc[qualpor]
-                                        print('\033[032mO pc usou uma porção de defesa\033[m ')
-                                        ação=(pcesc['ação'])
-                                        if '+' in ação:
-                                            carpc['dfs']=carpc['dfs']+int(ação)
-                                        if '*' in ação:
-                                            ação=ação.replace('*','')
-                                            carpc['dfs']=carpc['dfs']*int(ação)
-                                        if ação=='0':
-                                            combate=0
-                                        defpc.pop(defpc.index(pcesc))
-                                        pcpor.pop(pcpor.index(pcesc))
-                                    ###########Jogada do usuario##############
-                                    if len(atqusu)>0:
-                                        print('=+'*25)
-                                        print(f'\033[033m{"porções de ataque":^50}\033[m')
-                                        print('=+'*25)
-                                        for i in atqusu:
-                                            crt=crt+1
-                                            print(f'{crt}°- {i["nome"].upper()}',end=' ')
-                                            print(i['ação'])
-                                        print('=+'*25)
-                                        while True:
-                                            escpor=input('Deseja usar alguma S/N ').upper().strip()[0]
-                                            if escpor in 'SN':
-                                                if escpor=='S':
-                                                    while True:
-                                                        if len(atqusu)>=2:
-                                                            escpor=input(f'Qual porção? 1/{len(atqusu)}: ')
-                                                        else:
-                                                            escpor='1'
-                                                        if escpor.isnumeric()==True:
-                                                            if int(escpor)==0 or int(escpor)>len(atqusu):
-                                                                print('\033[031mPorção Inexistente\033[m')
-                                                            else:
-                                                                poresc=atqusu[int(escpor)-1]
-                                                                ação=poresc['ação']
-                                                                if '+' in ação:
-                                                                    carusu['atk']=int(carusu['atk'])+int(ação)
-                                                                    print('\033[032mporção usada com sucesso!\033[m')
-                                                                elif '*' in ação:
-                                                                    ação=ação.replace('*','')
-                                                                    carusu['atk']=int(carusu['atk'])*int(ação)
-                                                                    print('\033[032mPorção usada com sucesso!\033[m')                                                                                             
-                                                                atqusu.pop(atqusu.index(poresc))
-                                                                usupor.pop(usupor.index(poresc))
-                                                                break                
-                                            
-                                                        else:
-                                                            print('\033[031mOpção inválida\033[m')
-                                                    break
-                                                else:
-                                                    print('\033[031mVocê Não usou nenhuma porção\033[m')
-                                                    break
-                                            else:
-                                                print('\033[031mOpção inválida\033[m')
-                                    else:
-                                        print('\033[031mVocê não possui porções de Ataque\033[m')
-                                        break
-                                    
-
-                                    #####combate#####
-                                    if combate==0:
-                                        print('\033[m033mporção de imunidade usada pelo Pc\033[m')
-                                    else:
-                                        dano=carpc['dfs']-carusu['atk']
-                                        if dano>0:
-                                            print(f'\033[031mVocê Perdeu\033[m')
-                                            print(f'sua carta \033[036m{carusu["nome"].upper()}\033[m foi elimininada')
-                                            carpc['dfs']=carpc['dfs']-dano
-                                            usu.pop(usu.index(carusu))
-                                            vpc=vpc+1
-                                        elif dano==0:
-                                            print(f'\033[033mEmpate\033[m')
-                                            carpc['dfs']=carusu['atk']=0
-                                            print(f'\033[036m{carusu["nome"].upper()}\033[m')
-                                            print(f'\033[031mAtaque: {carusu["atk"]:>4}\033[m')
-                                            print(f'\033[032mDefesa: {carusu["dfs"]:>4}\033[m')
-                                        else:
-                                            print(f'\033[032mVocê Ganhou\033[m')
-                                            carusu['atk']=dano*-1
-                                            print(f'\033[036m{carusu["nome"].upper()}\033[m')
-                                            print(f'\033[031mAtaque: {carusu["atk"]:>4}\033[m')
-                                            print(f'\033[032mDefesa: {carusu["dfs"]:>4}\033[m')
-                                            pc.pop(pc.index(carpc))
-                                            vusu=vusu+1
-                                    break
-                                        ###defesa###
-                                if acaousu=='D':
-                                    ###########Escolha da porção do pc########
-                                    if usapor==0 or len(atqpc)==0:
-                                        print('\033[031mO pc não usou porção de Ataque\033[m')
-                                    else:
-                                        qualpor=randint(0,len(atqpc)-1)
-                                        pcesc=atqpc[qualpor]
-                                        print('\033[032mO pc usou uma porção de Ataque\033[m ')
-                                        ação=(pcesc['ação'])
-                                        if '+' in ação:
-                                            carpc['atk']=carpc['atk']+int(ação)
-                                        if '*' in ação:
-                                            ação=ação.replace('*','')
-                                            carpc['atk']=carpc['atk']*int(ação)
-                                        if ação==0:
-                                            combate=0
-                                        atqpc.pop(atqpc.index(pcesc))
-                                        pcpor.pop(pcpor.index(pcesc))
-                                   ##############Jogada do ususario#################
-                                    if len(defusu)>0:
-                                        print('=+'*25)
-                                        print(f'\033[033m{"porções de Defesa":^50}\033[m')
-                                        print('=+'*25)
-                                        for i in defusu:
-                                            crt=crt+1
-                                            print(f'{crt}°- {i["nome"]}',end=' ')
-                                            print(i['ação'])
-                                        print('=+'*25)
-                                        while True:
-                                            escpor=input('Deseja usar alguma S/N ').upper().strip()[0]
-                                            if escpor in 'SN':
-                                                if escpor=='S':
-                                                    while True:
-                                                        if len(defusu)>=2:
-                                                            escpor=input(f'Qual porção? 1/{len(defusu)}: ')
-                                                        else:
-                                                            escpor='1'
-                                                        if escpor.isnumeric()==True:
-                                                            if int(escpor)==0 or int(escpor)>len(defusu):
-                                                                print('\033[031mPorção Inválida\033[m')
-                                                            else:
-                                                                poresc=defusu[int(escpor)-1]
-                                                                ação=poresc['ação']
-                                                                if '+' in ação:
-                                                                    carusu['dfs']=int(carusu['dfs'])+int(ação)
-                                                                    print('\033[032mporção usada com sucesso!\033[m')
-                                                                if '*' in ação:
-                                                                    ação=ação.replace('*','')
-                                                                    carusu['dfs']=int(carusu['dfs'])*int(ação)
-                                                                    print('\033[032mPorção usada com sucesso!\033[m')
-                                                                if ação=='0':
-                                                                    combate=0
-                                                                defusu.pop(defusu.index(poresc))
-                                                                usupor.pop(usupor.index(poresc))
-                                                                break               
-                                                        else:
-                                                            print('\033[031mOpção inválida\033[m')
-                                                    break        
-                                                else:
-                                                    print('\033[031mVocê não usou nenhuma porção\033[m')
-                                                    break
-                                            else:
-                                                print('\033[031mOpção inválida\033[m')
-                                    else:
-                                        print('\033[031mVocê não possui porções de Defesa\033[m')
-                                        ########combate#########
-                                    if combate==0:
-                                        print('\033[033mPorção de imunidade usada\033[m')
-                                    if combate==1:
-                                        dano=carpc['atk']-carusu['dfs']
-                                        if dano>0:
-                                            print(f'\033[031mVocê Perdeu\033[m')
-                                            print(f'Sua carta \033[035m{carusu["nome"].upper()}\033[m foi eliminada')
-                                            carpc['atk']=carpc['atk']-dano
-                                            usu.pop(usu.index(carusu))
-                                            vpc=vpc+1
-                                        elif dano==0:
-                                            print(f'\033[033mEmpatou\033[m')
-                                            carpc['atk']=carusu['dfs']=0
-                                            print(f'\033[036m{carusu["nome"].upper()}\033[m')
-                                            print(f'\033[031mAtaque: {carusu["atk"]:>4}\033[m')
-                                            print(f'\033[032mDefesa: {carusu["dfs"]:>4}\033[m')
-                                        else:
-                                            print(f'\033[032mVocê Ganhou\033[m')
-                                            carusu['dfs']=(dano*-1)
-                                            print(f'\033[036m{carusu["nome"].upper()}\033[m')
-                                            print(f'\033[031mAtaque: {carusu["atk"]:>4}\033[m')
-                                            print(f'\033[032mDefesa: {carusu["dfs"]:>4}\033[m')
-                                            pc.pop(pc.index(carpc))
-                                            vusu=vusu+1
-                                    break
-                                        #######RECARGA########
-                            if acaousu =='R':
-                                nome=carusu['nome'].upper()
-                                while True:
-                                    acaousu=input('\033[032m[D]\033[mefesa ou \033[031m[A]\033[mtaque: ').upper().strip()[0]
-                                    if acaousu in 'AD':
-                                        if acaousu=='A':
-                                            carusu['atk']=carusu['atk']+500
-                                            print(f'\033[031mVocê recarregou o ataque da carta {nome}\033[m')
-                                        if acaousu=='D':
-                                            carusu['dfs']=carusu['dfs']+500
-                                            print(f'\033[032mVocê recarregou a defesa da carta {nome}\033[m')
-                                        print(f'\033[036m{carusu["nome"].upper()}\033[m')
-                                        print(f'\033[031mAtaque: {carusu["atk"]:>4}\033[m')
-                                        print(f'\033[032mDefesa: {carusu["dfs"]:>4}\033[m')
-                                        break
-                                    else:
-                                        print('\033[031mAção inválida\033[m')
-                                break
-                        else:
-                            print('\033[031mAção Inválido\033[m')
-                    break
-                else: 
-                    print('\033[031mCarta Inválida!\033[m')
-            else:
-                print('\033[031mCarta Inválida\033[m')
-
-        rod=rod+1
-        crt=0
-
-                              ###########Jogada do pc#########
-    if rod%2==1:
-        açoespc=('A','D','R')
-        escpc=randint(0,len(pc)-1)
-        print('=+'*25)
-        print(f'\033[033m{"Placar":^50}\033[m')
-        print('=+'*25)
-        print(f'\033[034mPc={vpc:2}\033[m')
-        print(f'\033[035mUsuario={vusu:^2}\033[m')
-        print('=+'*25)
-        print('=+'*25)
-        print(f'\033[036m{"vez do pc":^50}\033[m')
-        print('=+'*25)
-        ##############Pc escolhe a carta###########
-        carpc=pc[escpc]
-        print(carpc)
-        usapor=randint(0,1)
-        açãopc=açoespc[randint(0,2)]
-        print(açãopc)
-        combate=1
-        if açãopc in'AD':
-            if açãopc=='A':
-                print('\033[031mO pc está atacando\033[m')
-                if usapor==0 or len(atqpc)==0:
-                    print('\033[031mO pc não usou porção de Ataque\033[m')
+            açao=('a','d','r')
+            ação=açao[randint(0,len(açao)-1)]
+            if ação=='r':
+                print('\033[036mO pc recarregou\033[m')
+                ação=açao[randint(0,1)]
+                if ação=='a':
+                    carpc['atk']=carpc['atk']+500
                 else:
-                    qualpor=randint(0,len(atqpc)-1)
-                    pcesc=atqpc[qualpor]
-                    print('\033[032mO pc usou uma porção de Ataque\033[m ')
-                    ação=(pcesc['ação'])
-                    if '+' in ação:
-                        carpc['atk']=carpc['atk']+int(ação)
-                    if '*' in ação:
-                        ação=ação.replace('*','')
-                        carpc['atk']=carpc['atk']*int(ação)
-                    if ação==0:
-                        combate=0
-                    atqpc.pop(atqpc.index(pcesc))
-                    pcpor.pop(pcpor.index(pcesc))
-                
+                    carpc['dfs']=carpc['dfs']+500
             else:
-                print('\033[032mO pc está atacando\033[m')
-                if usapor==0 or len(defpc)==0:
-                    print('\033[031mO pc não usou porção de defesa\033[m')
+                if ação=='a':
+                    usuação='dfs'
+                    pcação='atk'
+                    print('\033[031mO pc está atacando\033[m')
                 else:
-                    qualpor=randint(0,len(defpc)-1)
-                    pcesc=defpc[qualpor]
-                    qualpor=randint(0,len(defpc)-1)
-                    pcesc=defpc[qualpor]
-                    print('\033[032mO pc usou uma porção de defesa\033[m ')
-                    ação=(pcesc['ação'])
-                    if '+' in ação:
-                        carpc['dfs']=carpc['dfs']+int(ação)
-                    if '*' in ação:
-                        ação=ação.replace('*','')
-                        carpc['dfs']=carpc['dfs']*int(ação)
-                    if ação=='0':
-                        combate=0
-                    defpc.pop(defpc.index(pcesc))
-                    pcpor.pop(pcpor.index(pcesc))
-
-        else:
-            açãopc=açoespc[randint(0,1)]
-            if açãopc=='A':
-                print('\033[031mO pc Recarregou o Ataque\033[m')
-                carpc['atk']=carpc['atk']+500
-            else:
-                print('\033[032mO pc recarregou a defesa\033[m ')
-                carpc['dfs']=carpc['dfs']+500
+                    usuação='atk'
+                    pcação='dfs'
+                    print('\033[032mO pc está se defendendo\033[m')
+            break
 
     crt=0
-    rod=rod+1
-    if len(pc)==0 or len(usu)==0:
-        break
-print('Fim do jogo')
-    
+    for i in usu:
+        crt=crt+1
+        print(f'{crt}°- \033[036m{i["nome"].upper():^12}\033[m',end=' ')
+        print(f'\033[031mAtaque: {i["atk"]:^4}\033[m',end=' ')
+        print(f'\033[032mDefesa: {i["dfs"]:^4}\033[m')
 
+    while True:
+        escolhausu=input(f'Qual carta deseja escolher? 1/{len(usu)} ')
+        if escolhausu.isnumeric()==True:
+            escolhausu=int(escolhausu)
+            if escolhausu==0 or escolhausu>len(usu):
+                print('\033[031mCarta inválida\033[m')
+            else:
+                carusu=usu[escolhausu-1]
+                cabeçalho('Carta escolhida')
+                print(f'{escolhausu}° \033[036m{carusu["nome"]}\033[m')
+                print(f'\033[031mAtaque: {carusu["atk"]}\033[m')
+                print(f'\033[032mDefesa: {carusu["dfs"]}\033[m')
+                break
+        else:
+            print('\033[031mCarta inválida\033[m')
+    if jogador=='usuario':
+        while True:
+            ação=input('Deseja \033[031m[A]\033[mtacar \033[032m[D]\033[mefender ou \033[036m[R]\033[mecarregar? ').upper().strip()[0]
+            if ação in 'ADR':
+                if ação in 'AD':
+                    crt=0
+                    atqusu=[]
+                    defusu=[]
+                    if ação=='A':
+                        usuação='atk'
+                        pcação='dfs'
+                        cabeçalho('Porção de Ataque')
+                        for i in usupor:
+                            if i['nome']=='atk':
+                                atqusu.append(i)
+                                crt=crt+1
+                                print(f'{crt}°- \033[036m{i["nome"].upper():^10}\033[m',end=' ')
+                                print(f'\033[035mAção={i["ação"]}\033[m')
+                        if crt==0:
+                            print('\033[031mVocê não possui porção de Ataque\033[m') 
+
+                    else:
+                        usuação='dfs'
+                        pcação='atk'
+                        cabeçalho('Porção de Defesa')
+                        for i in usupor:
+                            if i['nome']=='dfs':
+                                defusu.append(i)
+                                crt=crt+1
+                                print(f'{crt}°- \033[036m{i["nome"].upper():^10}\033[m',end=' ')
+                                print(f'\033[035mAção={i["ação"]}\033[m')  
+                        if crt==0:
+                            print('\033[031mVocê não possui porção de Defesa\033[m')         
+                    if crt>0:
+                        while True:            
+                            usaporção=input('Deseja usar uma porção? S/N ').upper().strip()[0]
+                            if usaporção in 'SN':
+                                if usaporção=='S':
+                                    while True:
+                                        if crt>1:
+                                            qualpor=input(f'Qual Porção deseja usar 1/{crt}? ')
+                                        else:
+                                            qualpor='1'
+                                        if qualpor.isnumeric()==True:
+                                            qualpor=int(qualpor)
+                                            if qualpor>0 and qualpor<=crt:
+                                                if usuação=='atk':
+                                                    porção=atqusu[qualpor-1]
+                                                if usuação=='dfs':
+                                                    porção=defusu[qualpor-1]
+                                                ação=(porção['ação'])
+                                                if '*' in ação:
+                                                    ação=ação.replace('*','') 
+                                                    carusu[usuação]=carusu[usuação]*int(ação)                                                                             
+                                                else:
+                                                    (carusu[usuação])=carusu[usuação]+int(ação)
+                                                    
+                                                usupor.pop(usupor.index(porção))
+                                                break
+                                            else:
+                                                print('\033[031mPorção inválida\033[m')
+                                        else:
+                                            print('\033[031mPorção inválida\033[m')
+
+                                if usaporção=='N':
+                                    print('\033[031mPorção não utilizada\033[m')
+                                break
+                            else:
+                                print('\033[031mOpção inválida\033[m')
+                else:
+                    while True:
+                        ação=input('Deseja recarregar \033[031m[A]\033[mtaque ou \033[032m[D]\033[mefesa? ').upper().strip()[0]
+                        if ação in 'AD':
+                            if ação=='A':
+                                carusu['atk']=carusu['atk']+500
+                            else:
+                                carusu['dfs']=carusu['dfs']+500
+                            print(f'{escolhausu}° \033[036m{carusu["nome"]}\033[m')
+                            print(f'\033[031mAtaque: {carusu["atk"]}\033[m')
+                            print(f'\033[032mDefesa: {carusu["dfs"]}\033[m')
+                            break
+                        else:
+                            print('\033[031mopção inválida\033[m')
+                break
+            else:
+                print('\033[031mAção inválida\033[m')
+    ########combate######
+    '''print(carusu)
+    print(carpc)'''
+    if pcação!='nada' or usuação!='nada':
+        dano=carpc[pcação]-carusu[usuação]
+        print(dano)
+        if dano>0:
+            print('\033[031mVocê perdeu\033[m')
+            carpc[pcação]=carpc[pcação]-dano
+            usu.pop(usu.index(carusu))
+        elif dano==0:
+            print('\033[033mEmpate\033[m')
+            carpc[pcação]=carusu[usuação]=0
+        else:
+            print('\033[032mVocê ganhou\033[m')
+            carusu[usuação]=dano*-1
+            pc.pop(pc.index(carpc))
+        '''print(len(usu))
+        print(len(pc))
+        print(carusu)
+        print(carpc)'''
+
+
+
+
+#####################JOGO########################
+cabeçalho('CARTAS')
+crt=0
+for i in usu:
+    crt=crt+1
+    print(f'{crt}°- \033[036m{i["nome"].upper():^12}\033[m',end=' ')
+    print(f'\033[031mAtaque: {i["atk"]:^4}\033[m',end=' ')
+    print(f'\033[032mDefesa: {i["dfs"]:^4}\033[m')
+cabeçalho("Porções")
+crt=0
+for i in usupor:
+    crt=crt+1
+    print(f'{crt}°- \033[036m{i["nome"].upper():^10}\033[m',end=' ')
+    print(f'\033[035mAção={i["ação"]}\033[m')
+
+while True:
+    if rod%2==0:
+        jogada='usuario'
+        cabeçalho('Usuario')
+    if rod%2==1:
+        jogada='pc'
+        cabeçalho('Computador')
+    if rod==20:
+        cabeçalho('Fim')
+        break
+    jogo(jogada)
+    rod=rod+1
